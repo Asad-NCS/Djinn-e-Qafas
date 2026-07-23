@@ -1,3 +1,7 @@
+# Djinn-e-Qafas
+
+**Live Deployment:** [https://djinn-e-qafas-l2yb4c6bia-el.a.run.app](https://djinn-e-qafas-l2yb4c6bia-el.a.run.app)
+
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
 ## Getting Started
