@@ -1,26 +1,179 @@
 @import "tailwindcss";
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+@theme {
+  --font-sans: var(--font-cinzel), ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  --font-serif: var(--font-im-fell), ui-serif, Georgia, Cambria, "Times New Roman", Times, serif;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer utilities {
+  .text-shadow {
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
+  .text-shadow-red {
+    text-shadow: 0 0 10px rgba(139, 26, 26, 0.8);
   }
 }
 
+:root {
+  --bg-color: #0a0805;
+  --text-primary: #f0e6d3;
+  --amber-accent: #c8963e;
+  --danger-red: #8b1a1a;
+}
+
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
+  overflow-x: hidden;
+  overflow-y: auto;
+  margin: 0;
+  padding: 0;
+  user-select: none;
+}
+
+/* Base setup for screen effect classes */
+.effect-none { }
+
+.effect-breathe {
+  animation: breathe 4s ease-in-out infinite;
+}
+
+.effect-shake {
+  animation: shake 0.5s ease-in-out;
+}
+
+.effect-glitch {
+  animation: glitch 0.3s cubic-bezier(.25, .46, .45, .94) both;
+}
+
+.effect-flash_white {
+  animation: flash-white 0.5s ease-out;
+}
+
+.effect-flash_red {
+  animation: flash-red 0.5s ease-out;
+}
+
+.effect-jinn_appear {
+  /* triggers specific jinn animations inside the component */
+}
+
+/* Parallax Layers */
+.scene-container {
+  position: relative;
+  width: 100%;
+  height: 60vh;
+  overflow: hidden;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.layer-bg, .layer-mid, .layer-fg {
+  position: absolute;
+  width: 120%; /* wider to allow padding for parallax */
+  height: 120%;
+  top: -10%;
+  left: -10%;
+  background-size: cover;
+  background-position: center;
+  transition: transform 0.1s ease-out;
+  /* Option B: Real Photography Grading applied directly to the layers */
+  filter: sepia(0.6) brightness(0.3) contrast(1.3) grayscale(0.2) hue-rotate(-10deg);
+}
+
+/* Animations */
+@keyframes breathe {
+  0%, 100% { transform: scale(1.0); }
+  50% { transform: scale(1.025); }
+}
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-8px) rotate(-0.5deg); }
+  40% { transform: translateX(8px) rotate(0.5deg); }
+  60% { transform: translateX(-5px); }
+  80% { transform: translateX(5px); }
+}
+
+@keyframes glitch {
+  0% { clip-path: inset(0 0 95% 0); transform: translateX(-4px); }
+  20% { clip-path: inset(40% 0 50% 0); transform: translateX(4px); }
+  40% { clip-path: inset(70% 0 20% 0); transform: translateX(-2px); }
+  100% { clip-path: inset(0); transform: translateX(0); }
+}
+
+@keyframes flash-white {
+  0% { filter: brightness(300%) grayscale(100%); }
+  100% { filter: brightness(100%); }
+}
+
+@keyframes flash-red {
+  0% { filter: sepia(100%) hue-rotate(-50deg) saturate(500%); }
+  100% { filter: none; }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  92% { opacity: 1; }
+  93% { opacity: 0.4; }
+  94% { opacity: 1; }
+  96% { opacity: 0.2; }
+  97% { opacity: 1; }
+}
+
+.anim-vignette-pulse {
+  animation: vignette-pulse 3s infinite ease-in-out;
+}
+
+@keyframes vignette-pulse {
+  0%, 100% { box-shadow: inset 0 0 80px rgba(0,0,0,0.7); }
+  50% { box-shadow: inset 0 0 120px rgba(0,0,0,0.9); }
+}
+
+.skeleton-shimmer {
+  background: linear-gradient(90deg, rgba(20,20,20,1) 0%, rgba(40,40,40,1) 50%, rgba(20,20,20,1) 100%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite linear;
+}
+
+@keyframes shimmer {
+  0% { background-position: -200% 0; }
+  100% { background-position: 200% 0; }
+}
+
+.hud-font {
+  font-family: var(--font-sans);
+  text-transform: uppercase;
+  letter-spacing: 2px;
+}
+
+.narrative-font {
+  font-family: var(--font-serif);
+  font-size: 1.25rem;
+  line-height: 1.8;
+}
+
+/* Jinn Sprite Overlay */
+.jinn-overlay {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 100%;
+  height: 100%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.5s;
+  background-image: url('/jinn-sprite.png');
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 50;
+}
+
+.jinn-active {
+  opacity: 1;
+  animation: flicker 0.5s infinite alternate;
 }
